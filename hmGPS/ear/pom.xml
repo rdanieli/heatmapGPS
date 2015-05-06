@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>hmGPS</artifactId>
+		<groupId>com.eng.univates</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>hmGPS-ear</artifactId>
+	<packaging>ear</packaging>
+
+	<dependencies>
+		<!-- Depend on the ejb module and war so that we can package them -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>hmGPS-ejb</artifactId>
+			<version>${project.version}</version>
+			<type>ejb</type>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>hmGPS-web-rest</artifactId>
+			<type>war</type>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<finalName>gps</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ear-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<!-- Tell Maven we are using Java EE 6 -->
+					<version>6</version>
+					<defaultLibBundleDir>APP-INF/lib</defaultLibBundleDir>
+					<skinnyWars>true</skinnyWars>
+					<unpackTypes>war</unpackTypes>
+					<modules>
+						<webModule>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>hmGPS-web-rest</artifactId>
+							<bundleFileName>hmGPS-web-rest.war</bundleFileName>
+							<contextRoot>/hm</contextRoot>
+						</webModule>
+						<ejbModule>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>hmGPS-ejb</artifactId>
+							<bundleFileName>hmGPS-ejb.jar</bundleFileName>
+						</ejbModule>
+					</modules>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jboss.as.plugins</groupId>
+				<artifactId>jboss-as-maven-plugin</artifactId>
+				<configuration>
+					<id>${jboss.deploy.ip}:${jboss.deploy.port}</id>
+					<hostname>${jboss.deploy.ip}</hostname>
+					<port>${jboss.deploy.port}</port>
+					<domain>
+						<server-groups>
+							<server-group>${jboss.deploy.group}</server-group>
+						</server-groups>
+					</domain>
+					<filename>${project.build.finalName}.ear</filename>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>deploy</goal>
+							</goals>
+						</execution>
+					</executions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
