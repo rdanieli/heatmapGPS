@@ -2,6 +2,8 @@ package com.eng.univates.rn.impl;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import com.eng.univates.bd.CrudBD;
 import com.eng.univates.bd.impl.CrudBDImpl;
 import com.eng.univates.rn.CrudRN;
@@ -10,7 +12,7 @@ public class CrudRNImpl<T, ID> implements CrudRN<T, ID> {
 
 	private CrudBD<T, ID> crudBD;
 	
-//	@PostConstruct
+	@PostConstruct
 	public void init(){
 		crudBD = new CrudBDImpl<T, ID>();
 	}
@@ -32,18 +34,12 @@ public class CrudRNImpl<T, ID> implements CrudRN<T, ID> {
 		return crudBD.persist(entity);
 	}
 
-	/**
-	 * @return the crudBD
+	/* (non-Javadoc)
+	 * @see com.eng.univates.rn.CrudRN#findOne(java.lang.Object)
 	 */
-	public CrudBD<T, ID> getCrudBD() {
-		return crudBD;
-	}
-
-	/**
-	 * @param crudBD the crudBD to set
-	 */
-	public void setCrudBD(CrudBD<T, ID> crudBD) {
-		this.crudBD = crudBD;
+	@Override
+	public T findOne(T entity) {
+		return crudBD.findOne(entity);
 	}
 	
 }

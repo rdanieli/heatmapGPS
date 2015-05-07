@@ -43,9 +43,14 @@
 				<configuration>
 					<!-- Tell Maven we are using EJB 3.1 -->
 					<ejbVersion>3.1</ejbVersion>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-	
+
 </project>
