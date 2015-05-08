@@ -1,13 +1,16 @@
 package com.eng.univates.bd.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.eng.univates.bd.CrudBD;
@@ -46,11 +49,27 @@ public class CrudBDImpl<T,ID> implements CrudBD<T,ID> {
 		
 		Root root = cq.from(entity.getClass());
 		
-		cq.where(getSetup().setup(cb, root, entity));
+		buildWhere(cq, cb, root, entity);
 		
 		TypedQuery q = entityManager.createQuery(cq);
 		
-		return (T) q.getSingleResult();
+		T result = null;
+		try {
+		    result = (T) q.getSingleResult();
+		} catch (NoResultException e) {
+		    System.out.println("No result forund for... ");
+		}
+		return result;
+	}
+	
+	private void buildWhere(CriteriaQuery cq, CriteriaBuilder cb, Root root, T entity) {
+		List<Predicate> list = new ArrayList<Predicate>();
+		
+		getSetup().setup(cb, root, entity, list);
+		
+		if(!list.isEmpty()) {
+			cq.where(list.toArray(new Predicate[list.size()]));
+		}
 	}
 
 	@Override

@@ -1,11 +1,14 @@
 package com.eng.univates.pojo;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * @author Rafael-Danieli
@@ -23,6 +26,13 @@ public class Usuario implements Serializable {
 	
 	@Column(name="senha")
 	private String senha;
+
+	@Column(name="dt_ultimo_login")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date ultimoLogin;
+	
+	@Column(name="session_atual")
+	private String session;
 	
 	public Usuario() {
 	}
@@ -58,6 +68,34 @@ public class Usuario implements Serializable {
 		this.senha = senha;
 	}
 	
+	/**
+	 * @return the ultimoLogin
+	 */
+	public Date getUltimoLogin() {
+		return ultimoLogin;
+	}
+
+	/**
+	 * @param ultimoLogin the ultimoLogin to set
+	 */
+	public void setUltimoLogin(Date ultimoLogin) {
+		this.ultimoLogin = ultimoLogin;
+	}
+
+	/**
+	 * @return the session
+	 */
+	public String getSession() {
+		return session;
+	}
+
+	/**
+	 * @param session the session to set
+	 */
+	public void setSession(String session) {
+		this.session = session;
+	}
+
 	@Override
 	public String toString() {
 		return this.login;

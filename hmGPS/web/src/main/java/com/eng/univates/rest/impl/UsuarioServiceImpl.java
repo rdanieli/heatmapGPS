@@ -8,6 +8,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 
 import com.eng.univates.builder.UsuarioBuilder;
+import com.eng.univates.pojo.Usuario;
 import com.eng.univates.rest.UsuarioService;
 import com.eng.univates.rn.UsuarioRN;
 
@@ -22,18 +23,24 @@ public class UsuarioServiceImpl implements UsuarioService {
 	
 	@Override
 	public String consulta(@PathParam("usuario") String usr) {
-		return "Olá: " + usuarioRn.findOne(new UsuarioBuilder().comNome("rdanieli").build()).getLogin();
+		return "Olá: " + usuarioRn.findOne(new UsuarioBuilder().comNome(usr).build()).getLogin();
 	}
 
 	@Override
-	public String auth(@FormParam("usr") String usr, @FormParam("pwd") String pwd) {
+	public Usuario auth(@FormParam("usr") String usr, @FormParam("pwd") String pwd) {
+		Usuario usuario = null;
 		
-//		if (authenticate(username, password)) {
-//        request.getSession(true);
-//        // Set the session attributes as you wish
-//    }
+		if(usuarioRn.findOne(new UsuarioBuilder(usr, pwd).build()) != null){
+			request.getSession(true);
+			
+			
+			
+			
+			usuario.setSenha(null);
+    }
 		
-		return null;
+		
+		return usuario;
 	}
 	
 }
