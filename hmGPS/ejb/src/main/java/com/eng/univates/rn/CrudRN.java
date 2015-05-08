@@ -7,4 +7,5 @@ public interface CrudRN<T,ID> {
 	public List<T> listarTodos();
 	public T findOne(T entity);
 	public T persistir(T entity);
+	public com.eng.univates.bd.CrudBD<T, ID> getDAO();
 }

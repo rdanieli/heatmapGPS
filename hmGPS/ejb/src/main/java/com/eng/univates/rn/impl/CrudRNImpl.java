@@ -2,21 +2,13 @@ package com.eng.univates.rn.impl;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
+import javax.ejb.Stateless;
 
-import com.eng.univates.bd.CrudBD;
-import com.eng.univates.bd.impl.CrudBDImpl;
 import com.eng.univates.rn.CrudRN;
 
+@Stateless
 public class CrudRNImpl<T, ID> implements CrudRN<T, ID> {
 
-	private CrudBD<T, ID> crudBD;
-	
-	@PostConstruct
-	public void init(){
-		crudBD = new CrudBDImpl<T, ID>();
-	}
-	
 	@Override
 	public T remover(T entity) {
 		// TODO Auto-generated method stub
@@ -31,7 +23,7 @@ public class CrudRNImpl<T, ID> implements CrudRN<T, ID> {
 
 	@Override
 	public T persistir(T entity) {
-		return crudBD.persist(entity);
+		return getDAO().persist(entity);
 	}
 
 	/* (non-Javadoc)
@@ -39,7 +31,10 @@ public class CrudRNImpl<T, ID> implements CrudRN<T, ID> {
 	 */
 	@Override
 	public T findOne(T entity) {
-		return crudBD.findOne(entity);
+		return getDAO().findOne(entity);
 	}
 	
+	public com.eng.univates.bd.CrudBD<T,ID> getDAO() {
+		return null;
+	}
 }

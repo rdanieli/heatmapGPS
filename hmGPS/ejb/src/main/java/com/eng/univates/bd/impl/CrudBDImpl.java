@@ -2,19 +2,21 @@ package com.eng.univates.bd.impl;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import javax.persistence.metamodel.EntityType;
 
 import com.eng.univates.bd.CrudBD;
+import com.eng.univates.setup.Setup;
 
+@Stateless
 public class CrudBDImpl<T,ID> implements CrudBD<T,ID> {
 
-	@PersistenceContext 
+	@PersistenceContext(unitName="heatmapGPS")
 	EntityManager entityManager;
 	
 	@Override
@@ -29,13 +31,25 @@ public class CrudBDImpl<T,ID> implements CrudBD<T,ID> {
 	}
 
 	@Override
+	public Setup<T> getSetup() {
+		throw new IllegalArgumentException("override o metodo setup");
+	}
+	
+	@Override
 	public T findOne(T entity) {
+		if (entity == null) {
+			throw new IllegalArgumentException("Informe uma entity.");
+		}
+		
 		CriteriaBuilder cb = getCriteriaBuilder();
 		CriteriaQuery<? extends Object> cq = cb.createQuery(entity.getClass());
 		
 		Root root = cq.from(entity.getClass());
-		//setup
+		
+		cq.where(getSetup().setup(cb, root, entity));
+		
 		TypedQuery q = entityManager.createQuery(cq);
+		
 		return (T) q.getSingleResult();
 	}
 
@@ -54,5 +68,4 @@ public class CrudBDImpl<T,ID> implements CrudBD<T,ID> {
 	public CriteriaBuilder getCriteriaBuilder() {
 		return entityManager.getCriteriaBuilder();
 	}
-
 }
