@@ -15,32 +15,31 @@ import com.eng.univates.rn.UsuarioRN;
 @Stateless
 public class UsuarioServiceImpl implements UsuarioService {
 
-	@EJB
-	UsuarioRN usuarioRn;
-	
-	@Context 
-	HttpServletRequest request;
-	
-	@Override
-	public String consulta(@PathParam("usuario") String usr) {
-		return "Olá: " + usuarioRn.findOne(new UsuarioBuilder().comNome(usr).build()).getLogin();
+    @EJB
+    UsuarioRN usuarioRn;
+
+    @Context
+    HttpServletRequest request;
+
+    @Override
+    public String consulta(@PathParam("usuario") String usr) {
+	return "Olá: "
+		+ usuarioRn.findOne(new UsuarioBuilder().comNome(usr).build())
+			.getLogin();
+    }
+
+    @Override
+    public Usuario auth(@FormParam("usr") String usr,
+	    @FormParam("pwd") String pwd) {
+	Usuario usuario = null;
+
+	if (usuarioRn.findOne(new UsuarioBuilder(usr, pwd).build()) != null) {
+	    request.getSession(true);
+
+	    usuario.setSenha(null);
 	}
 
-	@Override
-	public Usuario auth(@FormParam("usr") String usr, @FormParam("pwd") String pwd) {
-		Usuario usuario = null;
-		
-		if(usuarioRn.findOne(new UsuarioBuilder(usr, pwd).build()) != null){
-			request.getSession(true);
-			
-			
-			
-			
-			usuario.setSenha(null);
+	return usuario;
     }
-		
-		
-		return usuario;
-	}
-	
+
 }
