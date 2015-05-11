@@ -18,4 +18,17 @@ public class UsuarioRNImpl extends CrudRNImpl<Usuario, String> implements Usuari
 	public CrudBD<Usuario, String> getDAO() {
 		return usuarioBD;
 	}
+	
+	@Override
+	public Usuario findOne(Usuario entity) {
+		if( entity.getLogin() == null || entity.getLogin().isEmpty() ){
+			throw new IllegalArgumentException("Informe o usuário.");
+		}
+		
+		if( entity.getSenha() == null || entity.getSenha().isEmpty() ){
+			throw new IllegalArgumentException("Informe a senha.");
+		}
+		
+		return super.findOne(entity);
+	}
 }
