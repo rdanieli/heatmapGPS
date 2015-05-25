@@ -3,7 +3,6 @@ package com.eng.univates.rest.impl;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 
@@ -29,8 +28,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public Usuario auth(@FormParam("usr") String usr,
-	    @FormParam("pwd") String pwd) {
+    public Usuario auth(String usr, String pwd) {
 	Usuario usuario = null;
 
 	if (usuarioRn.findOne(new UsuarioBuilder(usr, pwd).build()) != null) {
