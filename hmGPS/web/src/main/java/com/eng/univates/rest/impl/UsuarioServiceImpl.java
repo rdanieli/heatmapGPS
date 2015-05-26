@@ -47,8 +47,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 				usuario.setSenha(null);
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new IllegalArgumentException(e.getMessage());
 		}
 
 		return usuario;
@@ -67,6 +67,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new IllegalArgumentException(e.getMessage());
 		}
 		return false;
 	}
