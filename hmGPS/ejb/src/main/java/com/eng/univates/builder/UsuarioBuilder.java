@@ -24,6 +24,11 @@ public class UsuarioBuilder implements Builder<Usuario>{
 		return this;
 	}
 
+	public UsuarioBuilder comToken(String token) {
+		usuario.setToken(token);
+		return this;
+	}
+	
 	@Override
 	public Usuario build() {
 		return usuario;

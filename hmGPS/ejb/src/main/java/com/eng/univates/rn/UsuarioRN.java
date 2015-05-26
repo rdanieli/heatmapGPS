@@ -7,4 +7,5 @@ import com.eng.univates.pojo.Usuario;
 @Remote
 public interface UsuarioRN extends CrudRN<Usuario, String>{
 	
+	public Usuario login(Usuario usuario);
 }

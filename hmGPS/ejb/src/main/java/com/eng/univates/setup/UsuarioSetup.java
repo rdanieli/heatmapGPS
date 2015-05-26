@@ -21,5 +21,9 @@ public class UsuarioSetup implements Setup<Usuario>{
 		if(entity.getSenha() != null) {
 			p.add(cb.equal(from.get("senha"), entity.getSenha()));			
 		}
+		
+		if(entity.getToken() != null) {
+			p.add(cb.equal(from.get("token"), entity.getToken()));
+		}
 	}
 }

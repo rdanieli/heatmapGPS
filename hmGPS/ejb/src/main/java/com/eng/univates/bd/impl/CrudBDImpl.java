@@ -12,6 +12,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 
 import com.eng.univates.bd.CrudBD;
 import com.eng.univates.setup.Setup;
@@ -23,6 +24,7 @@ public class CrudBDImpl<T,ID> implements CrudBD<T,ID> {
 	EntityManager entityManager;
 	
 	@Override
+	@Transactional	
 	public T persist(T entity) {
 		return entityManager.merge(entity);
 	}
@@ -51,7 +53,8 @@ public class CrudBDImpl<T,ID> implements CrudBD<T,ID> {
 		
 		buildWhere(cq, cb, root, entity);
 		
-		TypedQuery q = entityManager.createQuery(cq);
+		TypedQuery q = entityManager.createQuery(cq);	
+		
 		
 		T result = null;
 		try {

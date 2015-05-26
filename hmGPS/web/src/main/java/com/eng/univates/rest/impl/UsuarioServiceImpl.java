@@ -35,25 +35,39 @@ public class UsuarioServiceImpl implements UsuarioService {
 		Usuario usuario = null;
 
 		try {
-			if ((usuario = usuarioRn.findOne(new UsuarioBuilder(new String(Base64.decode(usr)), new String(Base64.decode(pwd))).build())) != null) {
+			if ((usuario = usuarioRn.login(new UsuarioBuilder(new String(Base64.decode(usr)), new String(Base64.decode(pwd))).build())) != null) {
 				SecureRandom random = new SecureRandom();
 				byte bytes[] = new byte[64];
 				random.nextBytes(bytes);
 				usuario.setToken(Base64.encodeBytes(bytes));
-				
+
 				usuario.setUltimoLogin(Calendar.getInstance());
 				usuario.setUltimoRequest(Calendar.getInstance());
 				usuarioRn.persistir(usuario);
-				
-				//limpa a senha do objeto para não conversar 
-				//mais com senha, somente com token
+
 				usuario.setSenha(null);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		return usuario;
+	}
+
+	@Override
+	public boolean logout(@HeaderParam("token") String token) {
+		try {
+			Usuario usuario = usuarioRn.findOne(new UsuarioBuilder().comToken(token).build());
+
+			if (usuario != null) {
+				usuario.setToken(null);
+				usuario = usuarioRn.persistir(usuario);
+				return usuario.getToken() == null;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

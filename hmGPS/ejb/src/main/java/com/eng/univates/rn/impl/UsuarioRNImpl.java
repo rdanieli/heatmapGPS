@@ -20,7 +20,7 @@ public class UsuarioRNImpl extends CrudRNImpl<Usuario, String> implements Usuari
 	}
 	
 	@Override
-	public Usuario findOne(Usuario entity) {
+	public Usuario login(Usuario entity) {
 		if( entity.getLogin() == null || entity.getLogin().isEmpty() ){
 			throw new IllegalArgumentException("Informe o usuário.");
 		}

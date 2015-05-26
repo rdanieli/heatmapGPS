@@ -21,9 +21,12 @@ public interface UsuarioService {
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-//	@Consumes(MediaType.)
 	@Path("/auth")
 	public Usuario auth(@Context HttpServletRequest request, @HeaderParam("usr") String usr, @HeaderParam("pwd") String pwd);
 	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/logout")
+	public boolean logout(@HeaderParam("token") String token);
 	
 }
