@@ -2,6 +2,7 @@ package com.eng.univates.rest.impl;
 
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.Calendar;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -20,37 +21,39 @@ import com.eng.univates.rn.UsuarioRN;
 @Stateless
 public class UsuarioServiceImpl implements UsuarioService {
 
-    @EJB
-    UsuarioRN usuarioRn;
+	@EJB
+	UsuarioRN usuarioRn;
 
-    @Override
-    public String consulta(@PathParam("usuario") String usr) {
-	return "Olá: "
-		+ usuarioRn.findOne(new UsuarioBuilder().comNome(usr).build())
-			.getLogin();
-    }
-
-    @Override
-    // considerando um dia utilizar HTTPS
-    public Usuario auth(@Context HttpServletRequest request,
-	    @HeaderParam("usr") String usr, @HeaderParam("pwd") String pwd) {
-	Usuario usuario = null;
-
-	try {
-	    if ((usuario = usuarioRn.findOne(new UsuarioBuilder(new String(
-		    Base64.decode(usr)), new String(Base64.decode(pwd)))
-		    .build())) != null) {
-		SecureRandom random = new SecureRandom();
-		byte bytes[] = new byte[20];
-		random.nextBytes(bytes);
-		usuario.setSenha(null);
-	    }
-	} catch (IOException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	@Override
+	public String consulta(@PathParam("usuario") String usr) {
+		return "Olá: " + usuarioRn.findOne(new UsuarioBuilder().comNome(usr).build()).getLogin();
 	}
 
-	return usuario;
-    }
+	@Override
+	// considerando um dia utilizar HTTPS
+	public Usuario auth(@Context HttpServletRequest request, @HeaderParam("usr") String usr, @HeaderParam("pwd") String pwd) {
+		Usuario usuario = null;
 
+		try {
+			if ((usuario = usuarioRn.findOne(new UsuarioBuilder(new String(Base64.decode(usr)), new String(Base64.decode(pwd))).build())) != null) {
+				SecureRandom random = new SecureRandom();
+				byte bytes[] = new byte[64];
+				random.nextBytes(bytes);
+				usuario.setToken(Base64.encodeBytes(bytes));
+				
+				usuario.setUltimoLogin(Calendar.getInstance());
+				usuario.setUltimoRequest(Calendar.getInstance());
+				usuarioRn.persistir(usuario);
+				
+				//limpa a senha do objeto para não conversar 
+				//mais com senha, somente com token
+				usuario.setSenha(null);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return usuario;
+	}
 }

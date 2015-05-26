@@ -24,7 +24,7 @@ public class CrudBDImpl<T,ID> implements CrudBD<T,ID> {
 	
 	@Override
 	public T persist(T entity) {
-		return null;
+		return entityManager.merge(entity);
 	}
 
 	@Override
