@@ -32,8 +32,12 @@ public class Usuario implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar ultimoLogin;
 
-    @Column(name = "session_atual")
-    private String session;
+    @Column(name = "token")
+    private String token;
+    
+    @Column(name = "dt_ultimo_request")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar ultimoRequest;    
 
     public Usuario() {
     }
@@ -88,20 +92,21 @@ public class Usuario implements Serializable {
     public void setUltimoLogin(Calendar ultimoLogin) {
 	this.ultimoLogin = ultimoLogin;
     }
-
-    /**
-     * @return the session
-     */
-    public String getSession() {
-	return session;
+    
+    public String getToken() {
+        return token;
     }
 
-    /**
-     * @param session
-     *            the session to set
-     */
-    public void setSession(String session) {
-	this.session = session;
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Calendar getUltimoRequest() {
+        return ultimoRequest;
+    }
+
+    public void setUltimoRequest(Calendar ultimoRequest) {
+        this.ultimoRequest = ultimoRequest;
     }
 
     @Override
