@@ -19,98 +19,98 @@ import javax.persistence.TemporalType;
 @Entity
 public class Usuario implements Serializable {
 
-    private static final long serialVersionUID = -760190790775962026L;
+	private static final long serialVersionUID = -760190790775962026L;
 
-    @Id
-    @Column(name = "login")
-    private String login;
+	@Id
+	@Column(name = "login")
+	private String login;
 
-    @Column(name = "senha")
-    private String senha;
+	@Column(name = "senha")
+	private String senha;
 
-    @Column(name = "dt_ultimo_login")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Calendar ultimoLogin;
+	@Column(name = "dt_ultimo_login")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Calendar ultimoLogin;
 
-    @Column(name = "token")
-    private String token;
-    
-    @Column(name = "dt_ultimo_request")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Calendar ultimoRequest;    
+	@Column(name = "token")
+	private String token;
 
-    public Usuario() {
-    }
+	@Column(name = "dt_ultimo_request")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Calendar ultimoRequest;
 
-    public Usuario(String login, String senha) {
-	super();
-	this.login = login;
-	this.senha = senha;
-    }
+	public Usuario() {
+	}
 
-    /**
-     * @return the login
-     */
-    public String getLogin() {
-	return login;
-    }
+	public Usuario(String login, String senha) {
+		super();
+		this.login = login;
+		this.senha = senha;
+	}
 
-    /**
-     * @param login
-     *            the login to set
-     */
-    public void setLogin(String login) {
-	this.login = login;
-    }
+	/**
+	 * @return the login
+	 */
+	public String getLogin() {
+		return login;
+	}
 
-    /**
-     * @return the senha
-     */
-    public String getSenha() {
-	return senha;
-    }
+	/**
+	 * @param login
+	 *          the login to set
+	 */
+	public void setLogin(String login) {
+		this.login = login;
+	}
 
-    /**
-     * @param senha
-     *            the senha to set
-     */
-    public void setSenha(String senha) {
-	this.senha = senha;
-    }
+	/**
+	 * @return the senha
+	 */
+	public String getSenha() {
+		return senha;
+	}
 
-    /**
-     * @return the ultimoLogin
-     */
-    public Calendar getUltimoLogin() {
-	return ultimoLogin;
-    }
+	/**
+	 * @param senha
+	 *          the senha to set
+	 */
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
 
-    /**
-     * @param ultimoLogin
-     *            the ultimoLogin to set
-     */
-    public void setUltimoLogin(Calendar ultimoLogin) {
-	this.ultimoLogin = ultimoLogin;
-    }
-    
-    public String getToken() {
-        return token;
-    }
+	/**
+	 * @return the ultimoLogin
+	 */
+	public Calendar getUltimoLogin() {
+		return ultimoLogin;
+	}
 
-    public void setToken(String token) {
-        this.token = token;
-    }
+	/**
+	 * @param ultimoLogin
+	 *          the ultimoLogin to set
+	 */
+	public void setUltimoLogin(Calendar ultimoLogin) {
+		this.ultimoLogin = ultimoLogin;
+	}
 
-    public Calendar getUltimoRequest() {
-        return ultimoRequest;
-    }
+	public String getToken() {
+		return token;
+	}
 
-    public void setUltimoRequest(Calendar ultimoRequest) {
-        this.ultimoRequest = ultimoRequest;
-    }
+	public void setToken(String token) {
+		this.token = token;
+	}
 
-    @Override
-    public String toString() {
-	return this.login;
-    }
+	public Calendar getUltimoRequest() {
+		return ultimoRequest;
+	}
+
+	public void setUltimoRequest(Calendar ultimoRequest) {
+		this.ultimoRequest = ultimoRequest;
+	}
+
+	@Override
+	public String toString() {
+		return this.login;
+	}
 }
