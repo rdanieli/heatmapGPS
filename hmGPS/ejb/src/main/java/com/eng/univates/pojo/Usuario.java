@@ -1,7 +1,6 @@
 package com.eng.univates.pojo;
 
 import java.io.Serializable;
-import java.sql.Date;
 import java.util.Calendar;
 
 import javax.persistence.Column;

@@ -28,5 +28,4 @@ public interface UsuarioService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/logout")
 	public boolean logout(@HeaderParam("token") String token);
-	
 }

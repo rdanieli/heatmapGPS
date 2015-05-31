@@ -1,6 +1,5 @@
 package com.eng.univates.rest.impl;
 
-import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Calendar;
 
@@ -28,12 +27,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 	public String consulta(@PathParam("usuario") String usr) {
 		return "Olá: " + usuarioRn.findOne(new UsuarioBuilder().comNome(usr).build()).getLogin();
 	}
-
+	
 	@Override
 	// considerando um dia utilizar HTTPS
 	public Usuario auth(@Context HttpServletRequest request, @HeaderParam("usr") String usr, @HeaderParam("pwd") String pwd) {
 		Usuario usuario = null;
-
+		
 		try {
 			if ((usuario = usuarioRn.login(new UsuarioBuilder(new String(Base64.decode(usr)), new String(Base64.decode(pwd))).build())) != null) {
 				SecureRandom random = new SecureRandom();

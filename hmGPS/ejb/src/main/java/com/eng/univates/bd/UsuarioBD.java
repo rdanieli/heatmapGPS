@@ -6,4 +6,7 @@ import com.eng.univates.pojo.Usuario;
 
 @Remote
 public interface UsuarioBD extends CrudBD<Usuario, String> {
+	
+	
+	
 }
