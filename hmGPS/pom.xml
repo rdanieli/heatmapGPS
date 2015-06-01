@@ -42,7 +42,7 @@
 				in every module -->
 			<dependency>
 				<groupId>com.eng.univates</groupId>
-				<artifactId>hmGPS-web</artifactId>
+				<artifactId>hmGPS-web-rest</artifactId>
 				<version>${project.version}</version>
 				<type>war</type>
 				<scope>compile</scope>

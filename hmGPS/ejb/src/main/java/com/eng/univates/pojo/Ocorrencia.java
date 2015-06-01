@@ -12,6 +12,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Type;
+
+import com.vividsolutions.jts.geom.Point;
+
 @Table(name="ocorrencias")
 @Entity
 public class Ocorrencia implements Serializable {
@@ -20,7 +24,7 @@ public class Ocorrencia implements Serializable {
 
 	 @Id
 	 @GeneratedValue(generator = "my_gen")
-	 @SequenceGenerator(name = "my_gen", sequenceName = "ocorrencias_id_seq")
+	 @SequenceGenerator(name = "my_gen", sequenceName = "ocorrencias_id_seq", allocationSize=1)
 	 @Column(name="id")
 	 private Integer sequence;
 	 
@@ -44,9 +48,9 @@ public class Ocorrencia implements Serializable {
 	 @Column(name="horafato")
 	 private String horaFato;
 	 
-//	 @Column(name="local")
-//	 @Type(type = "org.hibernate.spatial.GeometryType")
-//	 private Point local;
+	 @Column(name="local")
+	 @Type(type = "org.hibernate.spatial.GeometryType")
+	 private Point local;
 
 	public Integer getSequence() {
 		return sequence;
@@ -104,12 +108,12 @@ public class Ocorrencia implements Serializable {
 		this.horaFato = horaFato;
 	}
 
-//	public Point getLocal() {
-//		return local;
-//	}
-//
-//	public void setLocal(Point local) {
-//		this.local = local;
-//	}
+	public Point getLocal() {
+		return local;
+	}
+
+	public void setLocal(Point local) {
+		this.local = local;
+	}
 	
 }

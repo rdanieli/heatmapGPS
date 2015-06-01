@@ -30,6 +30,12 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+				<groupId>com.google.code.geocoder-java</groupId>
+				<artifactId>geocoder-java</artifactId>
+				<version>0.16</version>
+			</dependency>
+
 	</dependencies>
 
 	<build>
@@ -57,6 +63,13 @@
 							<artifactId>hmGPS-ejb</artifactId>
 							<bundleFileName>hmGPS-ejb.jar</bundleFileName>
 						</ejbModule>
+						
+						<jarModule>
+              <groupId>com.google.code.geocoder-java</groupId>
+              <artifactId>geocoder-java</artifactId>
+              <bundleDir>APP-INF/lib</bundleDir>
+            </jarModule>
+            
 					</modules>
 				</configuration>
 			</plugin>
