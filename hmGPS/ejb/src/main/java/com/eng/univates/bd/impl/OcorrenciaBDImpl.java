@@ -1,12 +1,20 @@
 package com.eng.univates.bd.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
+import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.transform.Transformers;
+import org.hibernate.type.StandardBasicTypes;
 
 import com.eng.univates.bd.OcorrenciaBD;
 import com.eng.univates.pojo.Ocorrencia;
@@ -30,28 +38,41 @@ public class OcorrenciaBDImpl extends CrudBDImpl<Ocorrencia, Integer> implements
 	}
 
 	@Override
+	public List<Ocorrencia> getPontosConvertidos() {
+		Session s = entityManager.unwrap(Session.class);
+		@SuppressWarnings("unchecked")
+		List<Ocorrencia> r = s.createSQLQuery("select o.id as \"sequence\", "
+				+ "o.logradouro as \"logradouro\", "
+				+ "o.bairro as \"bairro\", "
+				+ "o.fato as \"fato\", "
+				+ "o.dataregistro as \"dataRegistro\", "
+				+ "o.datafato as \"dataFato\", "
+				+ "o.horafato as \"horaFato\", "
+				+ "st_asgeojson(o.local) as jsonLocal from ocorrencias o where o.local is not null").
+						addScalar("sequence").
+						addScalar("logradouro").
+						addScalar("bairro").
+						addScalar("fato").
+						addScalar("dataRegistro", StandardBasicTypes.CALENDAR).
+						addScalar("dataFato", StandardBasicTypes.CALENDAR).
+						addScalar("horaFato").
+						addScalar("jsonLocal").setResultTransformer(Transformers.aliasToBean(Ocorrencia.class)).list();
+		
+		return r;
+	}
+	
+	@Override
 	public String convertPontosGeo() {
-//		Ocorrencia oc = new Ocorrencia();
-//		oc.setBairro("Centro");
-//		oc.setLogradouro("Muito maravilhoso");
-//		oc.setDataFato(Calendar.getInstance());
-//		oc.setDataRegistro(Calendar.getInstance());
-//		oc.setFato("Consumado");
-//		
-
-//		
-//		try {
-
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//	
 		final Geocoder geocoder = new Geocoder();
 		WKTReader reader = new WKTReader();
 		
-		List<Ocorrencia> list = findAll();
+		List<Ocorrencia> list = findAll(new WhereClause<Ocorrencia>() {
+			@Override
+			public void buildWhere(CriteriaQuery cq, CriteriaBuilder cb, Root root, Ocorrencia entity) {
+				cq.where(cb.isNull(root.get("local")));
+				
+			}
+		}, 200);
 		
 		Session session = entityManager.unwrap(Session.class);
 		int count = 0;
@@ -77,7 +98,7 @@ public class OcorrenciaBDImpl extends CrudBDImpl<Ocorrencia, Integer> implements
 					session.clear();
 				}
 				
-				if (count == 300) {
+				if (count == 200) {
 					break;
 				}
 			} catch (IOException | ParseException e) {

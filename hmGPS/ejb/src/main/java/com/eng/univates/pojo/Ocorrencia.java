@@ -11,46 +11,53 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlTransient;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Type;
 
 import com.vividsolutions.jts.geom.Point;
 
-@Table(name="ocorrencias")
+@Table(name = "ocorrencias")
 @Entity
 public class Ocorrencia implements Serializable {
 
 	private static final long serialVersionUID = 3882063975359906386L;
 
-	 @Id
-	 @GeneratedValue(generator = "my_gen")
-	 @SequenceGenerator(name = "my_gen", sequenceName = "ocorrencias_id_seq", allocationSize=1)
-	 @Column(name="id")
-	 private Integer sequence;
-	 
-	 @Column(name="logradouro")
-	 private String logradouro;
-	 
-	 @Column(name="bairro")
-	 private String bairro;
-	 
-	 @Column(name="fato")
-	 private String fato;
-	  
-	 @Column(name="dataregistro")
-	 @Temporal(TemporalType.TIMESTAMP)
-	 private Calendar dataRegistro;
-	 
-	 @Column(name="datafato")
-	 @Temporal(TemporalType.TIMESTAMP)
-	 private Calendar dataFato;
-	 
-	 @Column(name="horafato")
-	 private String horaFato;
-	 
-	 @Column(name="local")
-	 @Type(type = "org.hibernate.spatial.GeometryType")
-	 private Point local;
+	@Id
+	@GeneratedValue(generator = "my_gen")
+	@SequenceGenerator(name = "my_gen", sequenceName = "ocorrencias_id_seq", allocationSize = 1)
+	@Column(name = "id")
+	private Integer sequence;
+
+	@Column(name = "logradouro")
+	private String logradouro;
+
+	@Column(name = "bairro")
+	private String bairro;
+
+	@Column(name = "fato")
+	private String fato;
+
+	@Column(name = "dataregistro")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Calendar dataRegistro;
+
+	@Column(name = "datafato")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Calendar dataFato;
+
+	@Column(name = "horafato")
+	private String horaFato;
+
+	@Column(name = "local")
+	@Type(type = "org.hibernate.spatial.GeometryType")
+	@JsonIgnore
+	private Point local;
+
+	@Transient
+	private String jsonLocal;
 
 	public Integer getSequence() {
 		return sequence;
@@ -114,6 +121,14 @@ public class Ocorrencia implements Serializable {
 
 	public void setLocal(Point local) {
 		this.local = local;
+	}
+	
+	public String getJsonLocal() {
+		return jsonLocal;
+	}
+
+	public void setJsonLocal(String jsonLocal) {
+		this.jsonLocal = jsonLocal;
 	}
 	
 }

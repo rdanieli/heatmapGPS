@@ -1,8 +1,11 @@
 package com.eng.univates.rest.impl;
 
+import java.util.List;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
+import com.eng.univates.pojo.Ocorrencia;
 import com.eng.univates.rest.OcorrenciaService;
 import com.eng.univates.rn.OcorrenciaRN;
 
@@ -17,4 +20,9 @@ public class OcorrenciaServiceImpl implements OcorrenciaService {
 		return ocorrenciaRn.converterPontosGeo();
 	}
 
+	@Override
+	public List<Ocorrencia> getPontosConvertidos() {
+		return ocorrenciaRn.getPontosConvertidos();
+	}	
+	
 }

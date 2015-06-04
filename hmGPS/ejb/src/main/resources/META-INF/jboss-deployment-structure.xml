@@ -1,0 +1,13 @@
+<!-- <jboss-deployment-structure> -->
+<!--   <deployment> -->
+<!--     <dependencies> -->
+<!--       <module name="system" > -->
+<!--          <imports> -->
+<!--             <include-set> -->
+<!--                <path name="com/google/code/geocoder/Geocoder"/> -->
+<!--              </include-set> -->
+<!--           </imports> -->
+<!--         </module> -->
+<!--     </dependencies> -->
+<!--   </deployment> -->
+<!-- </jboss-deployment-structure> -->

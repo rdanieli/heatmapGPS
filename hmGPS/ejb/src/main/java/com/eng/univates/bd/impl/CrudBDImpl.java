@@ -31,6 +31,11 @@ public class CrudBDImpl<T,ID> implements CrudBD<T,ID> {
 
 	@Override
 	public List<T> findAll() {
+		return findAll(null, 0);
+	}
+	
+	@Override
+	public List<T> findAll(WhereClause<T> whereClause, int max) {
 		Type type = getClass().getGenericSuperclass();
 		
 		ParameterizedType a = (ParameterizedType) type;
@@ -41,9 +46,16 @@ public class CrudBDImpl<T,ID> implements CrudBD<T,ID> {
 		CriteriaQuery<? extends Object> cq = cb.createQuery((Class<T>)actualType);
 		
 		Root root = cq.from((Class<T>)actualType);
-		cq.where(cb.isNull(root.get("local")));
+		
+		if(whereClause != null) {
+			whereClause.buildWhere(cq, cb, root, null);
+		}
 		
 		TypedQuery q = entityManager.createQuery(cq);
+		
+		if (max > 0){
+			q.setMaxResults(max);
+		}
 		
 		List<T> result = null;
 		try {
@@ -71,7 +83,7 @@ public class CrudBDImpl<T,ID> implements CrudBD<T,ID> {
 		
 		Root root = cq.from(entity.getClass());
 		
-		buildWhere(cq, cb, root, entity);
+		defaultClause.buildWhere(cq, cb, root, entity);
 		
 		TypedQuery q = entityManager.createQuery(cq);	
 		
@@ -85,15 +97,23 @@ public class CrudBDImpl<T,ID> implements CrudBD<T,ID> {
 		return result;
 	}
 	
-	private void buildWhere(CriteriaQuery cq, CriteriaBuilder cb, Root root, T entity) {
-		List<Predicate> list = new ArrayList<Predicate>();
-		
-		getSetup().setup(cb, root, entity, list);
-		
-		if(!list.isEmpty()) {
-			cq.where(list.toArray(new Predicate[list.size()]));
-		}
+	public interface WhereClause<T> {
+		void buildWhere(CriteriaQuery cq, CriteriaBuilder cb, Root root, T entity);
 	}
+	
+	private WhereClause<T> defaultClause = new WhereClause<T>() {
+		
+		@Override
+		public void buildWhere(CriteriaQuery cq, CriteriaBuilder cb, Root root, T entity) {
+			List<Predicate> list = new ArrayList<Predicate>();
+			
+			getSetup().setup(cb, root, entity, list);
+			
+			if(!list.isEmpty()) {
+				cq.where(list.toArray(new Predicate[list.size()]));
+			}
+		}
+	};
 
 	@Override
 	public T findById(ID id) {
