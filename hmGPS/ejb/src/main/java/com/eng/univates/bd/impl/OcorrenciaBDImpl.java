@@ -1,17 +1,13 @@
 package com.eng.univates.bd.impl;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.Criteria;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.StandardBasicTypes;
@@ -67,6 +63,7 @@ public class OcorrenciaBDImpl extends CrudBDImpl<Ocorrencia, Integer> implements
 		WKTReader reader = new WKTReader();
 		
 		List<Ocorrencia> list = findAll(new WhereClause<Ocorrencia>() {
+			@SuppressWarnings({ "rawtypes", "unchecked" })
 			@Override
 			public void buildWhere(CriteriaQuery cq, CriteriaBuilder cb, Root root, Ocorrencia entity) {
 				cq.where(cb.isNull(root.get("local")));

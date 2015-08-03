@@ -12,7 +12,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Type;
@@ -23,7 +22,7 @@ import com.vividsolutions.jts.geom.Point;
 @Entity
 public class Ocorrencia implements Serializable {
 
-	private static final long serialVersionUID = 3882063975359906386L;
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(generator = "my_gen")

@@ -19,6 +19,7 @@ import com.eng.univates.bd.CrudBD;
 import com.eng.univates.setup.Setup;
 
 @Stateless
+@SuppressWarnings( {"unchecked", "rawtypes"})
 public class CrudBDImpl<T,ID> implements CrudBD<T,ID> {
 
 	@PersistenceContext(unitName="heatmapGPS")
@@ -43,8 +44,8 @@ public class CrudBDImpl<T,ID> implements CrudBD<T,ID> {
     Type actualType = a.getActualTypeArguments()[0];
 		
 		CriteriaBuilder cb = getCriteriaBuilder();
-		CriteriaQuery<? extends Object> cq = cb.createQuery((Class<T>)actualType);
 		
+		CriteriaQuery<? extends Object> cq = cb.createQuery((Class<T>)actualType);
 		Root root = cq.from((Class<T>)actualType);
 		
 		if(whereClause != null) {

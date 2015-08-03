@@ -18,7 +18,7 @@ import javax.persistence.TemporalType;
 @Entity
 public class Usuario implements Serializable {
 
-	private static final long serialVersionUID = -760190790775962026L;
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "login")

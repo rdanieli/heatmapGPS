@@ -15,7 +15,9 @@ public class ApplicationConfig extends Application {
 	
 	public Set<Class<?>> getClasses() {
 		return new HashSet<Class<?>>(Arrays.asList(UsuarioServiceImpl.class, 
-																							 OcorrenciaServiceImpl.class));
+																							 OcorrenciaServiceImpl.class, 
+																							 //FilterCORSRequest.class,
+																							 FilterCORSResponse.class));
 	}
 
 }

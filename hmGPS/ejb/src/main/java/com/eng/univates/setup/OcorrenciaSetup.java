@@ -8,9 +8,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.eng.univates.pojo.Ocorrencia;
-import com.eng.univates.pojo.Usuario;
 
 @Stateless
+@SuppressWarnings("rawtypes")
 public class OcorrenciaSetup implements Setup<Ocorrencia>{
 
 	@Override

@@ -10,6 +10,7 @@ import javax.persistence.criteria.Root;
 import com.eng.univates.pojo.Usuario;
 
 @Stateless
+@SuppressWarnings("rawtypes")
 public class UsuarioSetup implements Setup<Usuario>{
 
 	@Override
