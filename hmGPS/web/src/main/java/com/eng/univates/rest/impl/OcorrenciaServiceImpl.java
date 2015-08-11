@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
+import com.eng.univates.pojo.Filter;
 import com.eng.univates.pojo.Ocorrencia;
 import com.eng.univates.rest.OcorrenciaService;
 import com.eng.univates.rn.OcorrenciaRN;
@@ -28,5 +29,11 @@ public class OcorrenciaServiceImpl implements OcorrenciaService {
 	@Override
 	public List<String> getDescricaoFatos() {
 		return ocorrenciaRn.getDescricaoFatos();
+	}
+
+	@Override
+	public List<Ocorrencia> filtraMapa(Filter filtro) {
+		System.out.println(filtro.getSelectedFato());
+		return null;
 	}	
 }
