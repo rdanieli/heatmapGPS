@@ -26,6 +26,10 @@ public class OcorrenciaRNImpl extends CrudRNImpl<Ocorrencia, Integer> implements
 		return occBD.getPontosConvertidos();
 	}
 	
+	public List<String> getDescricaoFatos() {
+		return occBD.getDescricaoFatos();
+	}
+	
 	@Override
 	public String converterPontosGeo() {
 		return occBD.convertPontosGeo();

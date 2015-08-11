@@ -17,6 +17,11 @@ public interface OcorrenciaService {
 	public String converterPontosGeo();
 	
 	@GET	
+	@Path("/descricaoFatos")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<String> getDescricaoFatos();
+	
+	@GET	
 	@Path("/pontosConvertidos")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Ocorrencia> getPontosConvertidos();

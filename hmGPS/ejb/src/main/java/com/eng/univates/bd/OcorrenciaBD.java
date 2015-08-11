@@ -10,4 +10,5 @@ import com.eng.univates.pojo.Ocorrencia;
 public interface OcorrenciaBD extends CrudBD<Ocorrencia, Integer> {
 	public String convertPontosGeo();
 	public List<Ocorrencia> getPontosConvertidos();
+	public List<String> getDescricaoFatos();
 }

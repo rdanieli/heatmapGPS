@@ -23,6 +23,10 @@ public class OcorrenciaServiceImpl implements OcorrenciaService {
 	@Override
 	public List<Ocorrencia> getPontosConvertidos() {
 		return ocorrenciaRn.getPontosConvertidos();
+	}
+
+	@Override
+	public List<String> getDescricaoFatos() {
+		return ocorrenciaRn.getDescricaoFatos();
 	}	
-	
 }

@@ -17,8 +17,7 @@ public class CrudRNImpl<T, ID> implements CrudRN<T, ID> {
 
 	@Override
 	public List<T> listarTodos() {
-		// TODO Auto-generated method stub
-		return null;
+		return getDAO().findAll();
 	}
 
 	@Override

@@ -57,6 +57,12 @@ public class OcorrenciaBDImpl extends CrudBDImpl<Ocorrencia, Integer> implements
 		return r;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getDescricaoFatos() {
+		return (List<String>)entityManager.createQuery("select distinct o.fato from Ocorrencia o order by o.fato").getResultList();
+	}
+	
 	@Override
 	public String convertPontosGeo() {
 		final Geocoder geocoder = new Geocoder();
