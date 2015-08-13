@@ -33,7 +33,6 @@ public class OcorrenciaServiceImpl implements OcorrenciaService {
 
 	@Override
 	public List<Ocorrencia> filtraMapa(Filter filtro) {
-		System.out.println(filtro.getSelectedFato());
-		return null;
+		return ocorrenciaRn.filtraMapa(filtro);
 	}	
 }

@@ -15,9 +15,9 @@ public class BairroSetup implements Setup<Bairro>{
 
 	@Override
 	public void setup(CriteriaBuilder cb, Root from, Bairro entity, List<Predicate> p) {
-//		if(entity.getLogin() != null){
-//			 p.add(cb.equal(from.get("login"), entity.getLogin()));
-//		}
+		if(entity.getId() != null){
+			 p.add(cb.equal(from.get("id"), entity.getId()));
+		}
 //		
 //		if(entity.getSenha() != null) {
 //			p.add(cb.equal(from.get("senha"), entity.getSenha()));			

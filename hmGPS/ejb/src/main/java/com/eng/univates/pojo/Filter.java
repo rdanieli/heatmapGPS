@@ -1,8 +1,9 @@
 package com.eng.univates.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Filter {
+public class Filter implements Serializable{
 	
 	private String selectedFato;
 	private Integer selectedBairroId;

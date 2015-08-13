@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 
 import com.eng.univates.bd.CrudBD;
 import com.eng.univates.bd.OcorrenciaBD;
+import com.eng.univates.pojo.Filter;
 import com.eng.univates.pojo.Ocorrencia;
 import com.eng.univates.rn.OcorrenciaRN;
 
@@ -33,5 +34,10 @@ public class OcorrenciaRNImpl extends CrudRNImpl<Ocorrencia, Integer> implements
 	@Override
 	public String converterPontosGeo() {
 		return occBD.convertPontosGeo();
+	}
+
+	@Override
+	public List<Ocorrencia> filtraMapa(Filter filtro) {
+		return occBD.filtraMapa(filtro);
 	}
 }

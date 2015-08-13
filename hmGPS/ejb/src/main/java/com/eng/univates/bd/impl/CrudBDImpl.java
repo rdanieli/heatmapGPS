@@ -118,7 +118,6 @@ public class CrudBDImpl<T,ID> implements CrudBD<T,ID> {
 
 	@Override
 	public T findById(ID id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
