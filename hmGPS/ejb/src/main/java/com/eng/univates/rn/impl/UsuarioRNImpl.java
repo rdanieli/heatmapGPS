@@ -29,6 +29,8 @@ public class UsuarioRNImpl extends CrudRNImpl<Usuario, String> implements Usuari
 			throw new IllegalArgumentException("Informe a senha.");
 		}
 		
-		return super.findOne(entity);
+		Usuario usuario = super.findOne(entity);
+		
+		return usuario;
 	}
 }
