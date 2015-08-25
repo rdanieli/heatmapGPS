@@ -21,6 +21,7 @@ import com.eng.univates.bd.OcorrenciaBD;
 import com.eng.univates.pojo.Bairro;
 import com.eng.univates.pojo.Filter;
 import com.eng.univates.pojo.Ocorrencia;
+import com.eng.univates.pojo.Usuario;
 import com.eng.univates.setup.OcorrenciaSetup;
 import com.eng.univates.setup.Setup;
 import com.google.code.geocoder.Geocoder;
@@ -134,6 +135,31 @@ public class OcorrenciaBDImpl extends CrudBDImpl<Ocorrencia, Integer> implements
 		return getPontosConvertidos(filtro);
 	}
 
+	@Override
+	public List<Ocorrencia> pontosBatalhao(Usuario usuario) {
+Session s = entityManager.unwrap(Session.class);
+		
+		StringBuilder sb = new StringBuilder( PROJECTION_OCORRENCIAS + " where ");
+		
+		sb.append( "ST_CONTAINS( ST_GeomFromText('SRID=4326;"+usuario.getBatalhao().getGeom().toText()+"'), o.local)" );
+		sb.append(" and o.local is not null ");
+		
+		//Order By ST_Distance(geometry g1, geometry g2);
+		
+		SQLQuery query = s.createSQLQuery(sb.toString());
+		
+		List<Ocorrencia> r = query.
+						addScalar("sequence").
+						addScalar("logradouro").
+						addScalar("bairro").
+						addScalar("fato").
+						addScalar("dataRegistro", StandardBasicTypes.CALENDAR).
+						addScalar("dataFato", StandardBasicTypes.CALENDAR).
+						addScalar("horaFato").
+						addScalar("jsonLocal").setResultTransformer(Transformers.aliasToBean(Ocorrencia.class)).list();
+		
+		return r;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
