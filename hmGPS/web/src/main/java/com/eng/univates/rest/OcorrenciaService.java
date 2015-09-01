@@ -12,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import com.eng.univates.pojo.ConsultaRotaBatalhao;
 import com.eng.univates.pojo.Filter;
 import com.eng.univates.pojo.Ocorrencia;
 
@@ -41,7 +42,9 @@ public interface OcorrenciaService {
 	@POST	
 	@Path("/pontosBatalhaoUsuario")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public List<Ocorrencia> pontosBatalhaoUsuario(@Context HttpServletRequest request, 
 			                                          @HeaderParam("login") String login, 
-			                                          @HeaderParam("token") String token);
+			                                          @HeaderParam("token") String token,
+			                                          ConsultaRotaBatalhao data );
 }

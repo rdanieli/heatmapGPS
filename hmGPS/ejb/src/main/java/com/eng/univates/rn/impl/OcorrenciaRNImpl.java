@@ -12,6 +12,7 @@ import com.eng.univates.pojo.Ocorrencia;
 import com.eng.univates.pojo.Usuario;
 import com.eng.univates.rn.OcorrenciaRN;
 import com.eng.univates.rn.UsuarioRN;
+import com.vividsolutions.jts.geom.Point;
 
 @Stateless
 public class OcorrenciaRNImpl extends CrudRNImpl<Ocorrencia, Integer> implements OcorrenciaRN {
@@ -47,10 +48,9 @@ public class OcorrenciaRNImpl extends CrudRNImpl<Ocorrencia, Integer> implements
 	}
 
 	@Override
-	public List<Ocorrencia> pontosBatalhao(Usuario usuario) {
-		
+	public List<Ocorrencia> pontosBatalhao(Usuario usuario, Point localViatura, Double distance) {		
 		usuario = usuRN.findOne(usuario);
 		
-		return occBD.pontosBatalhao(usuario);
+		return occBD.pontosBatalhao(usuario, localViatura, distance);
 	}
 }

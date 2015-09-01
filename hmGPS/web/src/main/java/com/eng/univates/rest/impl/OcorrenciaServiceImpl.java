@@ -10,11 +10,16 @@ import javax.ws.rs.core.Context;
 
 import org.jboss.resteasy.util.Base64;
 
+import com.eng.univates.pojo.ConsultaRotaBatalhao;
 import com.eng.univates.pojo.Filter;
 import com.eng.univates.pojo.Ocorrencia;
 import com.eng.univates.pojo.Usuario;
 import com.eng.univates.rest.OcorrenciaService;
 import com.eng.univates.rn.OcorrenciaRN;
+import com.google.gson.Gson;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.io.WKTReader;
 
 @Stateless
 public class OcorrenciaServiceImpl implements OcorrenciaService {
@@ -45,16 +50,22 @@ public class OcorrenciaServiceImpl implements OcorrenciaService {
 	@Override
 	public List<Ocorrencia> pontosBatalhaoUsuario(@Context HttpServletRequest request, 
 																					      @HeaderParam("login") String login, 
-																					      @HeaderParam("token") String token) {
+																					      @HeaderParam("token") String token,
+																					      ConsultaRotaBatalhao data ) {
 		
 		Usuario usuario = new Usuario();
+		Point p = null;
+		
 		try {
 			usuario.setLogin(new String(Base64.decode(login)));
-			usuario.setToken(new String(Base64.decode(token)));	
+			usuario.setToken(new String(Base64.decode(token)));
+			
+			p = (Point) new WKTReader().read("POINT("+data.getLng()+" "+data.getLat()+")");
+			p.setSRID(4326);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return ocorrenciaRn.pontosBatalhao(usuario);
+		return ocorrenciaRn.pontosBatalhao(usuario, p, data.getDistance());
 	}	
 }

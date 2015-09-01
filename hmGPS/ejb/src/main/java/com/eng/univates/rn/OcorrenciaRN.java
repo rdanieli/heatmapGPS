@@ -7,6 +7,7 @@ import javax.ejb.Remote;
 import com.eng.univates.pojo.Filter;
 import com.eng.univates.pojo.Ocorrencia;
 import com.eng.univates.pojo.Usuario;
+import com.vividsolutions.jts.geom.Point;
 
 @Remote
 public interface OcorrenciaRN extends CrudRN<Ocorrencia, Integer>{
@@ -15,6 +16,6 @@ public interface OcorrenciaRN extends CrudRN<Ocorrencia, Integer>{
 	public List<Ocorrencia> getPontosConvertidos();
 	public List<String> getDescricaoFatos();
 	public List<Ocorrencia> filtraMapa(Filter filtro);
-	public List<Ocorrencia> pontosBatalhao(Usuario usuario);
+	public List<Ocorrencia> pontosBatalhao(Usuario usuario, Point localViatura, Double distance);
 	
 }

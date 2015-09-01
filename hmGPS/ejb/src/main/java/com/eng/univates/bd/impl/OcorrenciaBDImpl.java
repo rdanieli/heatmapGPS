@@ -3,6 +3,7 @@ package com.eng.univates.bd.impl;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -136,31 +137,60 @@ public class OcorrenciaBDImpl extends CrudBDImpl<Ocorrencia, Integer> implements
 	}
 
 	@Override
-	public List<Ocorrencia> pontosBatalhao(Usuario usuario) {
-Session s = entityManager.unwrap(Session.class);
+	public List<Ocorrencia> pontosBatalhao(Usuario usuario, Point localViatura, Double distance) {
+		Session s = entityManager.unwrap(Session.class);
 		
-		StringBuilder sb = new StringBuilder( PROJECTION_OCORRENCIAS + " where ");
+		StringBuilder sb = new StringBuilder( "select o.id from ocorrencias o where ");
 		
 		sb.append( "ST_CONTAINS( ST_GeomFromText('SRID=4326;"+usuario.getBatalhao().getGeom().toText()+"'), o.local)" );
 		sb.append(" and o.local is not null ");
-		
-		//Order By ST_Distance(geometry g1, geometry g2);
+		sb.append(" ORDER BY ST_Distance_Sphere(o.local,'SRID=4326;"+localViatura.toText()+"')");
 		
 		SQLQuery query = s.createSQLQuery(sb.toString());
 		
-		List<Ocorrencia> r = query.
-						addScalar("sequence").
-						addScalar("logradouro").
-						addScalar("bairro").
-						addScalar("fato").
-						addScalar("dataRegistro", StandardBasicTypes.CALENDAR).
-						addScalar("dataFato", StandardBasicTypes.CALENDAR).
-						addScalar("horaFato").
-						addScalar("jsonLocal").setResultTransformer(Transformers.aliasToBean(Ocorrencia.class)).list();
+		List<Integer> r = (List<Integer>)query.list();
 		
-		return r;
+		List<String> list = calculaRota(r, usuario, localViatura, distance);
+		List<Ocorrencia> ocorrencias = new ArrayList<Ocorrencia>();
+		
+		for (String string : list) {
+			Ocorrencia ocorrencia = new Ocorrencia();
+			ocorrencia.setJsonLocal(string);
+			ocorrencias.add(ocorrencia);
+		}
+		
+		return ocorrencias;
 	}
 
+	private List<String> calculaRota(List<Integer> ids, Usuario usuario, Point localViatura, Double distance){
+		List<String> results = new ArrayList<String>();
+		Double result = 0.0;
+		String wktPoint = localViatura.toText();
+		
+		while( result < (distance * 1000) ) {
+			StringBuilder sb = new StringBuilder( "SELECT ST_AsGeojson(o.local) as jsonLocal, ST_AsText(o.local) fut, ST_Distance_Sphere(o.local,'SRID=4326;"+wktPoint+"'), o.id from ocorrencias o where ");
+			sb.append( " o.id in( " ).append(ids.toString().substring(1, ids.toString().length() - 1)).append(") ");
+			sb.append(" and o.local is not null ");
+			sb.append(" ORDER BY ST_Distance_Sphere(o.local,'SRID=4326;"+wktPoint+"') LIMIT 1");
+			
+			Object[] obj = (Object[])entityManager.createNativeQuery(sb.toString()).getSingleResult();
+//			POINT(-51.1939103 -30.1366389)
+			results.add(obj[0].toString());
+			wktPoint  = obj[1].toString();
+			result += new Double(obj[2].toString());
+			
+			for (Iterator<Integer> iterator = ids.iterator(); iterator.hasNext();) {
+				Integer i = (Integer)iterator.next();
+				if(new Integer(obj[3].toString()).equals(i)) {
+					iterator.remove();
+					break;
+				}
+			}
+		}
+		
+		return results;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getDescricaoFatos() {
