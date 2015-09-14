@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -50,6 +51,12 @@ public class CrudBDImpl<T,ID> implements CrudBD<T,ID> {
 		
 		if(whereClause != null) {
 			whereClause.buildWhere(cq, cb, root, null);
+		}
+		
+		Order order = getSetup().orderBy(cb, root);
+		
+		if(order != null) {
+			cq.orderBy(order);
 		}
 		
 		TypedQuery q = entityManager.createQuery(cq);

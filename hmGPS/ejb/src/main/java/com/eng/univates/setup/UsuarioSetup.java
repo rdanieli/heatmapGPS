@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -26,5 +28,10 @@ public class UsuarioSetup implements Setup<Usuario>{
 		if(entity.getToken() != null) {
 			p.add(cb.equal(from.get("token"), entity.getToken()));
 		}
+	}
+	
+	@Override
+	public Order orderBy(CriteriaBuilder cb, Root root) {
+		return null;
 	}
 }

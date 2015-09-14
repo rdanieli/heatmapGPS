@@ -54,6 +54,7 @@ public class OcorrenciaBDImpl extends CrudBDImpl<Ocorrencia, Integer> implements
 																									+ "o.dataregistro as \"dataRegistro\", "
 																									+ "o.datafato as \"dataFato\", "
 																									+ "o.horafato as \"horaFato\", "
+																								  + "o.ref_usr_lock as \"usuarioResp\", "
 																									+ "st_asgeojson(o.local) as jsonLocal from ocorrencias o ";
 	
 	@Override
@@ -125,6 +126,7 @@ public class OcorrenciaBDImpl extends CrudBDImpl<Ocorrencia, Integer> implements
 						addScalar("dataRegistro", StandardBasicTypes.CALENDAR).
 						addScalar("dataFato", StandardBasicTypes.CALENDAR).
 						addScalar("horaFato").
+						addScalar("usuarioResp").
 						addScalar("jsonLocal").setResultTransformer(Transformers.aliasToBean(Ocorrencia.class)).list();
 		
 		return r;
@@ -138,6 +140,8 @@ public class OcorrenciaBDImpl extends CrudBDImpl<Ocorrencia, Integer> implements
 
 	@Override
 	public List<Ocorrencia> pontosBatalhao(Usuario usuario, Point localViatura, Double distance) {
+		removeDependenciaOcorrenciaUsuario(usuario);
+		
 		Session s = entityManager.unwrap(Session.class);
 		
 		StringBuilder sb = new StringBuilder( "select o.id from ocorrencias o where ");
@@ -150,47 +154,69 @@ public class OcorrenciaBDImpl extends CrudBDImpl<Ocorrencia, Integer> implements
 		
 		List<Integer> r = (List<Integer>)query.list();
 		
-		List<String> list = calculaRota(r, usuario, localViatura, distance);
-		List<Ocorrencia> ocorrencias = new ArrayList<Ocorrencia>();
+		List<Ocorrencia> list = calculaRota(r, usuario, localViatura, distance);
 		
-		for (String string : list) {
-			Ocorrencia ocorrencia = new Ocorrencia();
-			ocorrencia.setJsonLocal(string);
-			ocorrencias.add(ocorrencia);
-		}
-		
-		return ocorrencias;
+		return list;
 	}
 
-	private List<String> calculaRota(List<Integer> ids, Usuario usuario, Point localViatura, Double distance){
-		List<String> results = new ArrayList<String>();
+	private void removeDependenciaOcorrenciaUsuario(Usuario usuario) {
+		entityManager.createQuery("UPDATE Ocorrencia o SET o.usuarioResp = null WHERE o.usuarioResp = :usr")
+							   .setParameter("usr", usuario.getLogin())
+							   .executeUpdate();
+	}
+	
+	private List<Ocorrencia> calculaRota(List<Integer> ids, Usuario usuario, Point localViatura, Double distance) {
+		List<Ocorrencia> results = new ArrayList<Ocorrencia>();
+		List<Integer> lockedOcorrencias = new ArrayList<Integer>();
 		Double result = 0.0;
 		String wktPoint = localViatura.toText();
 		
-		while( result < (distance * 1000) ) {
-			StringBuilder sb = new StringBuilder( "SELECT ST_AsGeojson(o.local) as jsonLocal, ST_AsText(o.local) fut, ST_Distance_Sphere(o.local,'SRID=4326;"+wktPoint+"'), o.id from ocorrencias o where ");
-			sb.append( " o.id in( " ).append(ids.toString().substring(1, ids.toString().length() - 1)).append(") ");
+		while (result <= (distance * 1000) && !ids.isEmpty()) {
+			StringBuilder sb = new StringBuilder("SELECT ST_AsGeojson(o.local) as jsonLocal, ST_AsText(o.local) fut, ST_Distance_Sphere(o.local,'SRID=4326;" + wktPoint + "'), o.id from ocorrencias o where ");
+			sb.append(" o.id in( ").append(ids.toString().substring(1, ids.toString().length() - 1)).append(") ");
 			sb.append(" and o.local is not null ");
-			sb.append(" ORDER BY ST_Distance_Sphere(o.local,'SRID=4326;"+wktPoint+"') LIMIT 1");
+			sb.append(" and o.ref_usr_lock is null ");
+			sb.append(" ORDER BY ST_Distance_Sphere(o.local,'SRID=4326;" + wktPoint + "') LIMIT 1");
+
+			Object[] obj = (Object[]) entityManager.createNativeQuery(sb.toString()).getSingleResult();
+			// POINT(-51.1939103 -30.1366389)
+
+			wktPoint = obj[1].toString();
 			
-			Object[] obj = (Object[])entityManager.createNativeQuery(sb.toString()).getSingleResult();
-//			POINT(-51.1939103 -30.1366389)
-			results.add(obj[0].toString());
-			wktPoint  = obj[1].toString();
 			result += new Double(obj[2].toString());
+
+			if(result <= (distance * 1000)) {
+				Ocorrencia oco = new Ocorrencia();
+				oco.setJsonLocal(obj[0].toString());
+				results.add(oco);
+			}
 			
 			for (Iterator<Integer> iterator = ids.iterator(); iterator.hasNext();) {
-				Integer i = (Integer)iterator.next();
-				if(new Integer(obj[3].toString()).equals(i)) {
+				Integer i = (Integer) iterator.next();
+				if (new Integer(obj[3].toString()).equals(i)) {
+					lockedOcorrencias.add(i);
 					iterator.remove();
 					break;
 				}
 			}
 		}
+
+		if(!results.isEmpty()){
+			atualizaRespoOcorrencia(lockedOcorrencias, usuario);
+		}
 		
 		return results;
 	}
 	
+	private void atualizaRespoOcorrencia(List<Integer> lockedOcorrencias, Usuario usuario) {
+		if(!lockedOcorrencias.isEmpty()) {
+			entityManager.createQuery("UPDATE Ocorrencia o SET o.usuarioResp = :usr WHERE o.sequence IN :ids")
+		   .setParameter("usr", usuario.getLogin())
+		   .setParameter("ids", lockedOcorrencias)
+		   .executeUpdate();
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getDescricaoFatos() {
