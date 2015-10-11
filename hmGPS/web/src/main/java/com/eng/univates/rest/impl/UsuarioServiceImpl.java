@@ -29,12 +29,15 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 	
 	@Override
-	// considerando um dia utilizar HTTPS
-	public Usuario auth(@Context HttpServletRequest request, @HeaderParam("usr") String usr, @HeaderParam("pwd") String pwd) {
+	public Usuario auth(@Context HttpServletRequest request, 
+										  @HeaderParam("usr") String usr, 
+										  @HeaderParam("pwd") String pwd) {
 		Usuario usuario = null;
 		
 		try {
-			if ((usuario = usuarioRn.login(new UsuarioBuilder(new String(Base64.decode(usr)), new String(Base64.decode(pwd))).build())) != null) {
+			if ((usuario = usuarioRn.login(new UsuarioBuilder(new String(Base64.decode(usr)), 
+																												new String(Base64.decode(pwd))).build()))
+																												!= null) {
 				SecureRandom random = new SecureRandom();
 				byte bytes[] = new byte[64];
 				random.nextBytes(bytes);
@@ -49,7 +52,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e.getMessage());
 		}
-
 		return usuario;
 	}
 

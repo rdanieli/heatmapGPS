@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import com.eng.univates.pojo.ConsultaRotaBatalhao;
 import com.eng.univates.pojo.Filter;
@@ -27,6 +28,11 @@ public interface OcorrenciaService {
 	@Path("/descricaoFatos")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<String> getDescricaoFatos();
+	
+	@GET	
+	@Path("/carPolImg")
+	@Produces("image/png")
+	public Response carPolImg();
 	
 	@GET	
 	@Path("/pontosConvertidos")

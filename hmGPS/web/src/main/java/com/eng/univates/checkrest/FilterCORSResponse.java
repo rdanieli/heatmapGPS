@@ -12,9 +12,8 @@ public class FilterCORSResponse implements ContainerResponseFilter {
 
 	@Override
 	public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
-		responseContext.getHeaders().add("Access-Control-Allow-Origin", "*");
 		
-//		responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS");
-//		responseContext.getHeaders().add("Access-Control-Request-Headers",requestContext.getHeaderString("Access-Control-Request-Headers"));
+		responseContext.getHeaders().add("Access-Control-Allow-Origin", "*");
+		responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
 	}
 }

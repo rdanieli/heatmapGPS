@@ -165,21 +165,31 @@ public class OcorrenciaBDImpl extends CrudBDImpl<Ocorrencia, Integer> implements
 							   .executeUpdate();
 	}
 	
-	private List<Ocorrencia> calculaRota(List<Integer> ids, Usuario usuario, Point localViatura, Double distance) {
+	private List<Ocorrencia> calculaRota(List<Integer> ids, 
+																			 Usuario usuario, 
+																			 Point localViatura, 
+																			 Double distance) {
 		List<Ocorrencia> results = new ArrayList<Ocorrencia>();
 		List<Integer> lockedOcorrencias = new ArrayList<Integer>();
 		Double result = 0.0;
 		String wktPoint = localViatura.toText();
 		
 		while (result <= (distance * 1000) && !ids.isEmpty()) {
-			StringBuilder sb = new StringBuilder("SELECT ST_AsGeojson(o.local) as jsonLocal, ST_AsText(o.local) fut, ST_Distance_Sphere(o.local,'SRID=4326;" + wktPoint + "'), o.id from ocorrencias o where ");
-			sb.append(" o.id in( ").append(ids.toString().substring(1, ids.toString().length() - 1)).append(") ");
+			StringBuilder sb = new StringBuilder
+			("SELECT ST_AsGeojson(o.local) as jsonLocal, " + 
+			 "       ST_AsText(o.local) fut, " + 
+			 "       ST_Distance_Sphere(o.local,'SRID=4326;" + wktPoint + "'), " + 
+			 "       o.id " + 
+			 "FROM ocorrencias o WHERE ");
+			sb.append(" o.id in( ").append(ids.toString()
+																				.substring(1, ids.toString().length() - 1))
+																				.append(") ");
 			sb.append(" and o.local is not null ");
 			sb.append(" and o.ref_usr_lock is null ");
 			sb.append(" ORDER BY ST_Distance_Sphere(o.local,'SRID=4326;" + wktPoint + "') LIMIT 1");
 
-			Object[] obj = (Object[]) entityManager.createNativeQuery(sb.toString()).getSingleResult();
-			// POINT(-51.1939103 -30.1366389)
+			Object[] obj = (Object[]) entityManager.createNativeQuery(sb.toString())
+																						 .getSingleResult();
 
 			wktPoint = obj[1].toString();
 			
@@ -241,7 +251,9 @@ public class OcorrenciaBDImpl extends CrudBDImpl<Ocorrencia, Integer> implements
 		int count = 0;
 		
 		for (Ocorrencia i : list) {
-			GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(i.getLogradouro() + ", Porto Alegre - RS").getGeocoderRequest();
+			GeocoderRequest geocoderRequest = new GeocoderRequestBuilder()
+			.setAddress(i.getLogradouro() + ", Porto Alegre - RS").getGeocoderRequest();
+			
 			try {
 				GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
 				if (geocoderResponse.getResults().isEmpty()) {
@@ -255,7 +267,7 @@ public class OcorrenciaBDImpl extends CrudBDImpl<Ocorrencia, Integer> implements
 				
 				i.setLocal(p);
 				
-				session.update(i); 
+				session.update(i);
 				if (++count % 50 == 0) {
 					session.flush();
 					session.clear();
