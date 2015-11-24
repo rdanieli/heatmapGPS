@@ -26,5 +26,11 @@ License
 
 GNU GENERAL PUBLIC LICENSE
 
+Créditos
+----
+
+* Aluno: Rafael Leonardo Danieli
+* Orientador: Alexandre Stürmer Wolf
+
    [rdanieli-back]: <https://github.com/rdanieli/heatmapGPS>
    [rdanieli-front]: <https://github.com/rdanieli/heatmapGPS-frontend>
